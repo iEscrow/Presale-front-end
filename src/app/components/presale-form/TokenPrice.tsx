@@ -1,14 +1,19 @@
-const TokenPrice = () => {
+type Props = {
+  title: string;
+  subtitle: string
+}
+
+const TokenPrice = ({ title, subtitle }: Props) => {
   return (
-    <div className="w-full flex flex-nowrap items-center justify-center my-8 lg:my-16">
-      <div className="flex-1 h-[2px] bg-gradient-to-r from-transparent from-20% via-logo-grad-blue via-70% to-logo-grad-purple to-100%"></div>
-      <div className="flex flex-[0_0_auto] mx-4 flex-col items-center justify-center">
-        <span className="text-lg font-semibold text-bg-logo mb-1">1 ESCROW</span>
-        <span className="font-bold text-xl text-light-blue">$0.015</span>
+    <div className="w-full flex flex-nowrap items-center justify-center my-8 md:my-12">
+      <div className="flex-1 h-[2px] bg-[linear-gradient(to_right,transparent_0%,transparent_15%,theme(colors.logo-grad-purple)_30%,theme(colors.logo-grad-blue)_50%,theme(colors.logo-grad-green)_70%,transparent_85%,transparent_100%)]"></div>      
+      <div className="flex flex-[0_0_auto] flex-col items-center justify-center">
+        <span className="text-base lg:text-md font-semibold text-bg-logo mb-1 rounded-l-full rounded-r-full"> {title} </span>
+        <span className="font-bold text-md md:text-lg text-light-blue rounded-l-full rounded-r-full"> {subtitle} </span>
       </div>
-      <div className="flex-1 h-[2px] bg-gradient-to-r from-logo-grad-purple from-0% via-logo-grad-blue via-30% to-transparent to-80%"></div>
+      <div className="flex-1 h-[2px] bg-[linear-gradient(to_left,transparent_0%,transparent_15%,theme(colors.logo-grad-purple)_30%,theme(colors.logo-grad-blue)_50%,theme(colors.logo-grad-green)_70%,transparent_85%,transparent_100%)]"></div>    
     </div>
   );
 }
- 
+
 export default TokenPrice;

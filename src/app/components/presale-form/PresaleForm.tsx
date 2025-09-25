@@ -1,14 +1,96 @@
-'use server'
+'use client'
 
+import CurrencyInput from "./CurrencyInput";
+import CurrencyRadio from "./CurrencyRadio";
+import CurrentBalance from "./CurrentBalance";
+import FormTitle from "./FormTitle";
+import GasFee from "./GasFee";
+import SupplyStatus from "./SupplyStatus";
+import TermsCheckbox from "./TermsCheckbox";
+import TokenBalance from "./TokenBalance";
 import TokenPrice from "./TokenPrice";
+
+export type Currency = {
+  name: string;
+  symbol: string;
+  iconURL: string;
+}
+
+const Currencies: Currency[] = [
+  {
+    name: "Ethereum",
+    symbol: "ETH",
+    iconURL: "img/currencies/ETH.png"
+  },
+  {
+    name: "Wrapped BNB",
+    symbol: "WBNB", 
+    iconURL: "img/currencies/WBNB.png"
+  },
+  {
+    name: "USD Coin",
+    symbol: "USDC",
+    iconURL: "img/currencies/USDC.png"
+  },
+  {
+    name: "Tether USD",
+    symbol: "USDT",
+    iconURL: "img/currencies/USDT.png"
+  },
+  {
+    name: "Wrapped Ethereum",
+    symbol: "WETH",
+    iconURL: "img/currencies/WETH.png"
+  },
+  {
+    name: "Wrapped Bitcoin", 
+    symbol: "WBTC",
+    iconURL: "img/currencies/WBTC.png"
+  },
+  {
+    name: "Chainlink",
+    symbol: "LINK",
+    iconURL: "img/currencies/LINK.png"
+  }
+]
 
 const PresaleForm = () => {
   return (
-    <form className="max-w-[800px] py-4 px-2 md:px-4 md:py-8 rounded-md border-[1px] border-body-text ">
-      <h1 className="text-3xl md:text-4xl font-bold text-center md:text-left text-bg-logo">
-        Buy <span className="escrow-text-gradient">ESCROW</span> Token
-      </h1>
-      <TokenPrice/>
+    <form id="presale-form" className="relative max-w-[720px] py-4 px-4 md:px-6 md:py-8 mb-4 rounded-md border-[1px] border-body-text">
+      <FormTitle/>
+      <TokenPrice title="1 ESCROW" subtitle="$0.015"/>
+      <SupplyStatus presaleSupply={8000000} tokensSold={1923400}/>
+      <div className="w-full h-[1px] m:my-8 my-4 bg-body-text rounded-l-full rounded-r-full"></div>
+      <div className="">
+        <h2 className="text-bg-logo font-semibold text-sm md:text-base">You deposit</h2>
+        <div className="my-3 flex items-center md:flex-nowrap flex-wrap md:gap-2 gap-1">
+          {
+            Currencies.map((currency, i) => (
+              <CurrencyRadio
+              key={i}
+                symbol={currency.symbol}
+                iconURL={currency.iconURL}
+              />
+            ))
+          }
+        </div>
+        <CurrentBalance
+          currentBalance={2.3456}
+          currency={{ iconURL: "img/currencies/ETH.png", symbol: "ETH" }}
+          />
+        <CurrencyInput
+          currencyBalance={2.3456}
+          currencyIconURL="img/currencies/ETH.png"
+          currencySymbol="ETH"
+          usdValue={1850}
+        />
+        <GasFee/>
+      </div>
+      <TokenPrice title="You will receive" subtitle="166K ESCROW"/>
+      <TokenBalance/>
+      <button className="w-full py-3 md:py-4 mt-4 font-medium border-[1px] border-bg-logo text-bg-logo text-sm md:text-base tracking-tight rounded-l-full rounded-r-full cursor-pointer duration-200 hover:text-black hover:border-bg-logo hover:bg-bg-logo" type="submit">Get verified to buy</button>
+      <TermsCheckbox/>
+      <img id="bg-form" src="/img/form-bg.jpg" className="absolute opacity-15 w-full h-full inset-0 -z-50" alt="" />
     </form>
   );
 }

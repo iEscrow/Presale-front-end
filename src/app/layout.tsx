@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`relative ${poppins.variable} bg-black antialiased min-h-screen min-w-screen`}
+        className={`relative ${poppins.variable} bg-black antialiased w-auto overflow-x-clip`}
       >
         <ProvidersWrapper>
           <NavBar />
