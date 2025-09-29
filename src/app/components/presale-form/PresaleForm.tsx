@@ -23,11 +23,6 @@ const Currencies: Currency[] = [
     iconURL: "img/currencies/ETH.png"
   },
   {
-    name: "Wrapped BNB",
-    symbol: "WBNB", 
-    iconURL: "img/currencies/WBNB.png"
-  },
-  {
     name: "USD Coin",
     symbol: "USDC",
     iconURL: "img/currencies/USDC.png"
@@ -36,6 +31,16 @@ const Currencies: Currency[] = [
     name: "Tether USD",
     symbol: "USDT",
     iconURL: "img/currencies/USDT.png"
+  },
+  {
+    name: "Chainlink",
+    symbol: "LINK",
+    iconURL: "img/currencies/LINK.png"
+  },
+  {
+    name: "Wrapped BNB",
+    symbol: "WBNB", 
+    iconURL: "img/currencies/WBNB.png"
   },
   {
     name: "Wrapped Ethereum",
@@ -47,32 +52,40 @@ const Currencies: Currency[] = [
     symbol: "WBTC",
     iconURL: "img/currencies/WBTC.png"
   },
-  {
-    name: "Chainlink",
-    symbol: "LINK",
-    iconURL: "img/currencies/LINK.png"
-  }
 ]
 
 const PresaleForm = () => {
   return (
-    <form id="presale-form" className="relative max-w-[720px] py-4 px-4 md:px-6 md:py-8 mb-4 rounded-md border-[1px] border-body-text">
+    <form id="presale-form" className="relative max-w-[720px] py-4 px-4 md:px-6 md:py-8 mb-4 rounded-md border-[1px] border-body-text overflow-hidden">
       <FormTitle/>
-      <TokenPrice title="1 ESCROW" subtitle="$0.015"/>
+      <TokenPrice title="1 $ESCROW" subtitle="$0.015"/>
       <SupplyStatus presaleSupply={8000000} tokensSold={1923400}/>
       <div className="w-full h-[1px] m:my-8 my-4 bg-body-text rounded-l-full rounded-r-full"></div>
       <div className="">
         <h2 className="text-bg-logo font-semibold text-sm md:text-base">You deposit</h2>
-        <div className="my-3 flex items-center md:flex-nowrap flex-wrap md:gap-2 gap-1">
+        <div className="md:mb-2 mb-1 mt-2 mx-auto flex items-center justify-center flex-wrap md:gap-2 gap-1">
           {
-            Currencies.map((currency, i) => (
+            Currencies.slice(0,4).map((currency, i) => (
               <CurrencyRadio
-              key={i}
+                key={i}
                 symbol={currency.symbol}
                 iconURL={currency.iconURL}
               />
             ))
           }
+        </div>
+        <div className="mb-3 mx-auto flex items-center justify-center flex-wrap md:gap-2 gap-1">
+          <div className="flex-[0.5_1_0]"></div>
+          {
+            Currencies.slice(4,7).map((currency, i) => (
+              <CurrencyRadio
+                key={i}
+                symbol={currency.symbol}
+                iconURL={currency.iconURL}
+              />
+            ))
+          }
+          <div className="flex-[0.5_1_0]"></div>
         </div>
         <CurrentBalance
           currentBalance={2.3456}
@@ -86,7 +99,7 @@ const PresaleForm = () => {
         />
         <GasFee/>
       </div>
-      <TokenPrice title="You will receive" subtitle="166K ESCROW"/>
+      <TokenPrice title="You will receive" subtitle="166K $ESCROW"/>
       <TokenBalance/>
       <button className="w-full py-3 md:py-4 mt-4 font-medium border-[1px] border-bg-logo text-bg-logo text-sm md:text-base tracking-tight rounded-l-full rounded-r-full cursor-pointer duration-200 hover:text-black hover:border-bg-logo hover:bg-bg-logo" type="submit">Get verified to buy</button>
       <TermsCheckbox/>

@@ -25,6 +25,8 @@
   --color-logo-grad-purple: #E020F1;
 
   --font-poppins: --font-poppins;
+
+  --animate-rotate-clockwise: rotateClockwise 20s linear infinite;
 }
 
 .escrow-text-gradient {
@@ -58,5 +60,17 @@ input[type="number"]:focus {
 }
 
 #bg-form {
-  mask-image: linear-gradient(20deg, #10101025 0%, transparent 30%, transparent 60%, #10101031 100%);
+  mask-image: linear-gradient(20deg, #1010103f 0%, transparent 40%, transparent 60%, #10101059 100%);
 }
+
+@keyframes rotateClockwise {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+

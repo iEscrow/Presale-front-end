@@ -22,7 +22,7 @@ const CurrencyInput = ({ currencyBalance, currencyIconURL, currencySymbol, usdVa
           type="number" 
           onChange={(e) => setCurrencyQuantity(parseFloat(e.target.value))} 
           step={'any'}
-          value={currencyQuantity}
+          value={currencyQuantity || ''}
           max={currencyBalance}
           min={0}
           placeholder={'0.0'}
