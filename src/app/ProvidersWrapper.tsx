@@ -2,13 +2,13 @@
 
 import { connectorsForWallets, darkTheme, getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { coinbaseWallet, metaMaskWallet, phantomWallet, trustWallet, walletConnectWallet } from "@rainbow-me/rainbowkit/wallets";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { PropsWithChildren } from "react";
+import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
+import { PropsWithChildren, useEffect } from "react";
 import { defineChain } from "viem/chains/utils";
-import { WagmiProvider, createConfig, http } from "wagmi";
+import { WagmiProvider, createConfig, http, useAccountEffect, useDisconnect } from "wagmi";
 import { base, mainnet } from "wagmi/chains";
 import { GetSiweMessageOptions, RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth';
-import { SessionProvider } from 'next-auth/react';
+import { SessionProvider, signOut } from 'next-auth/react';
 
 export const hardhat = defineChain({
   id: 31337,
@@ -61,6 +61,21 @@ export const config = createConfig({
   connectors
 });
 
+function DisconnectHandler() {
+
+  const queryClient = useQueryClient()
+
+  useAccountEffect({
+    onDisconnect: async () => {
+      await signOut({ redirect: false });
+      queryClient.clear()
+      window.location.reload()
+    }
+  });
+  
+  return null;
+}
+
 const ProvidersWrapper = ({ children }: PropsWithChildren) => {
 
   const queryClient = new QueryClient();
@@ -71,6 +86,7 @@ const ProvidersWrapper = ({ children }: PropsWithChildren) => {
         <QueryClientProvider client={queryClient}>
           <RainbowKitSiweNextAuthProvider>
             <RainbowKitProvider theme={darkTheme()} modalSize="compact">
+              <DisconnectHandler />
               { children }
             </RainbowKitProvider>
           </RainbowKitSiweNextAuthProvider>
