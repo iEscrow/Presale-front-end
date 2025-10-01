@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import NavBar from "./components/Navbar";
+import NavBar from "../components/Navbar";
 import '@rainbow-me/rainbowkit/styles.css';
 import ProvidersWrapper from "./ProvidersWrapper";
 

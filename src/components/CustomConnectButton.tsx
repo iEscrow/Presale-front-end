@@ -56,7 +56,7 @@ const CustomConnectButton = () => {
               }
 
               return (
-                <div style={{ display: 'flex', gap: 12 }}>
+                <div style={{ display: 'flex', gap: 12 }} className='items-center justify-center bg-black'>
                   <button
                     onClick={openChainModal}
                     style={{ display: 'flex', alignItems: 'center' }}
@@ -65,31 +65,27 @@ const CustomConnectButton = () => {
                     {chain.hasIcon && (
                       <div
                         style={{
-                          background: chain.iconBackground,
-                          width: 12,
-                          height: 12,
+                          width: 22,
+                          height: 22,
                           borderRadius: 999,
                           overflow: 'hidden',
-                          marginRight: 4,
+                          marginRight: 2,
                         }}
+                        className='flex items-center justify-center cursor-pointer'
                       >
                         {chain.iconUrl && (
                           <img
                             alt={chain.name ?? 'Chain icon'}
                             src={chain.iconUrl}
-                            style={{ width: 12, height: 12 }}
+                            style={{ width: 21, height: 21 }}
                           />
                         )}
                       </div>
                     )}
-                    {chain.name}
                   </button>
 
-                  <button onClick={openAccountModal} type="button">
+                  <button onClick={openAccountModal} type="button" className='text-bg-logo font-poppins cursor-pointer text-xs leading-0'>
                     {account.displayName}
-                    {account.displayBalance
-                      ? ` (${account.displayBalance})`
-                      : ''}
                   </button>
                 </div>
               );

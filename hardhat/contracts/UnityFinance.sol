@@ -10,7 +10,7 @@ contract UnityFinance is ERC20 {
     uint256 public circulating ;
     uint256 public burnt;
      
-    uint256 private _totalSupply =  1000000 * 10 ** uint(decimals()); // 1M
+    uint256 private _totalSupply =  1000000000000 * 10 ** uint(decimals()); // 1M
     mapping(address => bool) public whitelists;
 
 

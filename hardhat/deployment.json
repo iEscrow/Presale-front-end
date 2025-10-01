@@ -1,0 +1,31 @@
+{
+  "network": "hardhat-fork",
+  "timestamp": "2025-10-01T20:27:36.523Z",
+  "contracts": {
+    "unityToken": "0x82F3c3a79fD86895Ef7FA87C61A914d266e6Fb5e",
+    "presale": "0x2905a73157457204e9c1aa55579B561944E06ee5"
+  },
+  "tokens": {
+    "USDC": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    "USDT": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+    "WETH": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    "LINK": "0x514910771AF9Ca656af840dff83E8264EcF986CA",
+    "WBTC": "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599"
+  },
+  "testAccount": {
+    "address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+    "balances": {
+      "USDC": "500000000.01",
+      "USDT": "200000000.0",
+      "WETH": "7000.0",
+      "LINK": "8000000.0",
+      "WBTC": "600.0",
+      "WBNB": "50.0"
+    }
+  },
+  "presaleConfig": {
+    "rate": "666.666666666666666 tokens per USD",
+    "maxTokens": "5,000,000,000",
+    "duration": "30 days"
+  }
+}

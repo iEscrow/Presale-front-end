@@ -1,4 +1,4 @@
-import PresaleForm from "./components/presale-form/PresaleForm";
+import PresaleForm from "../components/presale-form/PresaleForm";
 
 export default function Home() {
   return (

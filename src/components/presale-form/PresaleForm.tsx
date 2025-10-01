@@ -1,5 +1,6 @@
 'use client'
 
+import { useAccount, useBalance, useChainId, useReadContract, useToken } from "wagmi";
 import CurrencyInput from "./CurrencyInput";
 import CurrencyRadio from "./CurrencyRadio";
 import CurrentBalance from "./CurrentBalance";
@@ -9,6 +10,10 @@ import SupplyStatus from "./SupplyStatus";
 import TermsCheckbox from "./TermsCheckbox";
 import TokenBalance from "./TokenBalance";
 import TokenPrice from "./TokenPrice";
+import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { ABIS } from "@/utils";
+import { formatUnits } from "viem";
 
 export type Currency = {
   name: string;
@@ -55,6 +60,20 @@ const Currencies: Currency[] = [
 ]
 
 const PresaleForm = () => {
+
+  const { address } = useAccount()
+
+  const { data } = useReadContract({
+    abi: ABIS.ERC20,
+    address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+    functionName: 'balanceOf',
+    args: [address]
+  })
+
+  useEffect(() => {
+    console.log(data);
+  }, [data])
+
   return (
     <form id="presale-form" className="relative max-w-[720px] py-4 px-4 md:px-6 md:py-8 mb-4 rounded-md border-[1px] border-body-text overflow-hidden">
       <FormTitle/>

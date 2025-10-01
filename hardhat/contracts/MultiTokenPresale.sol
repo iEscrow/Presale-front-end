@@ -263,7 +263,7 @@ contract MultiTokenPresale is Ownable, ReentrancyGuard, Pausable {
     
     // ============ INTERNAL FUNCTIONS ============
     
-    function _calculateTokenAmount(address paymentToken, uint256 paymentAmount, address beneficiary) internal view returns (uint256) {
+    function _calculateTokenAmount(address paymentToken, uint256 paymentAmount, address beneficiary) internal returns (uint256) {
         TokenPrice memory price = tokenPrices[paymentToken];
         require(price.isActive, "Token not accepted");
         
@@ -347,7 +347,7 @@ contract MultiTokenPresale is Ownable, ReentrancyGuard, Pausable {
         claimed = hasClaimed[user];
     }
     
-    function calculateTokenAmount(address paymentToken, uint256 paymentAmount, address beneficiary) external view returns (uint256) {
+    function calculateTokenAmount(address paymentToken, uint256 paymentAmount, address beneficiary) external returns (uint256) {
         return _calculateTokenAmount(paymentToken, paymentAmount, beneficiary);
     }
     
