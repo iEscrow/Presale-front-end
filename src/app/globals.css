@@ -27,6 +27,7 @@
   --font-poppins: --font-poppins;
 
   --animate-rotate-clockwise: rotateClockwise 20s linear infinite;
+  --animate-appear: appear 200ms ease-out forwards;
 }
 
 .escrow-text-gradient {
@@ -69,6 +70,15 @@ input[type="number"]:focus {
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1
   }
 }
 

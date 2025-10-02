@@ -39,7 +39,7 @@ const CustomConnectButton = () => {
               if (!connected) {
                 return (
                   <button 
-                    className='px-2 md:px-4 py-[2px] md:py-1 font-poppins tracking-tighter text-bg-logo text-sm border-[1px] border-bg-logo hover:bg-bg-logo hover:border-bg-logo hover:text-black duration-200 rounded-l-full rounded-r-full cursor-pointer' 
+                    className='h-7 px-2 md:px-4 py-[2px] md:py-1 font-poppins tracking-tighter text-bg-logo text-xs border-[1px] border-bg-logo hover:bg-bg-logo hover:border-bg-logo hover:text-black duration-200 rounded-l-full rounded-r-full cursor-pointer' 
                     onClick={openConnectModal} 
                     type="button">
                       Connect Wallet
@@ -56,7 +56,7 @@ const CustomConnectButton = () => {
               }
 
               return (
-                <div style={{ display: 'flex', gap: 12 }} className='items-center justify-center bg-black'>
+                <div style={{ display: 'flex', gap: 12 }} className='items-center justify-center bg-black h-7'>
                   <button
                     onClick={openChainModal}
                     style={{ display: 'flex', alignItems: 'center' }}
@@ -84,7 +84,7 @@ const CustomConnectButton = () => {
                     )}
                   </button>
 
-                  <button onClick={openAccountModal} type="button" className='text-bg-logo font-poppins cursor-pointer text-xs leading-0'>
+                  <button onClick={openAccountModal} type="button" className='text-bg-logo font-poppins cursor-pointer text-xs mt-[1px] leading-0'>
                     {account.displayName}
                   </button>
                 </div>

@@ -1734,4 +1734,26 @@ export const ABIS = {
         "type": "event"
     }
   ]
-}  
+}
+
+export const ALLOWED_NETS = [1, 31337]
+
+export type TokenDecimals = {
+  ETH: number,
+  WETH: number,
+  WBNB: number,
+  LINK: number,
+  WBTC: number,
+  USDC: number,
+  USDT: number
+}
+
+export const TOKEN_DECIMALS: TokenDecimals = {
+  ETH: 18,
+  WETH: 18,
+  WBNB: 18,
+  LINK: 18,
+  WBTC: 8,
+  USDC: 6,
+  USDT: 6
+}

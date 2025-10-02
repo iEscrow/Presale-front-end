@@ -76,6 +76,10 @@ function DisconnectHandler() {
   return null;
 }
 
+const getSiweMessageOptions: GetSiweMessageOptions = () => ({
+  statement: 'Sign this message to confirm wallet ownership and participate in the $ESCROW presale',
+});
+
 const ProvidersWrapper = ({ children }: PropsWithChildren) => {
 
   const queryClient = new QueryClient();
@@ -84,7 +88,7 @@ const ProvidersWrapper = ({ children }: PropsWithChildren) => {
     <WagmiProvider config={config}>
       <SessionProvider refetchInterval={0}>
         <QueryClientProvider client={queryClient}>
-          <RainbowKitSiweNextAuthProvider>
+          <RainbowKitSiweNextAuthProvider getSiweMessageOptions={getSiweMessageOptions}>
             <RainbowKitProvider theme={darkTheme()} modalSize="compact">
               <DisconnectHandler />
               { children }
