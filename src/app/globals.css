@@ -28,6 +28,7 @@
 
   --animate-rotate-clockwise: rotateClockwise 20s linear infinite;
   --animate-appear: appear 200ms ease-out forwards;
+  --animate-rotate-quarter-x: rotateQuarterX 400ms ease-out forwards;
 }
 
 .escrow-text-gradient {
@@ -82,5 +83,13 @@ input[type="number"]:focus {
   }
 }
 
+@keyframes rotateQuarterX {
+  from {
+    transform: rotateX(90deg)
+  }
+  to {
+    transform: rotateX(0)
+  }
+}
 
 

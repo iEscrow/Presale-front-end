@@ -1757,3 +1757,9 @@ export const TOKEN_DECIMALS: TokenDecimals = {
   USDC: 6,
   USDT: 6
 }
+
+export const PRESALE_SUPPLY = 5_000_000_000
+
+export const ESCROW_USD_VALUE = 0.015
+
+export const USD_DECIMALS = 8

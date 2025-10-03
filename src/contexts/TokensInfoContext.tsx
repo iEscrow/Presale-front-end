@@ -6,7 +6,9 @@ type ContextProps = {
   tokens: Array<Token>|undefined,
   tokensFetchStatus: "error" | "success" | "pending",
   selectedToken: Token|undefined,
-  setSelectedToken: Dispatch<SetStateAction<Token|undefined>>
+  setSelectedToken: Dispatch<SetStateAction<Token|undefined>>,
+  currencyQuantity: string,
+  setCurrencyQuantity: Dispatch<SetStateAction<string>>
 }
 
 export type Token = {
@@ -17,7 +19,14 @@ export type Token = {
   isActive: boolean
 }
 
-const defValues: ContextProps = { tokens: undefined, tokensFetchStatus: 'pending', selectedToken: undefined, setSelectedToken: () => null }
+const defValues: ContextProps = { 
+  tokens: undefined, 
+  tokensFetchStatus: 'pending', 
+  selectedToken: undefined, 
+  setSelectedToken: () => null,
+  currencyQuantity: '',
+  setCurrencyQuantity: () => null
+}
 
 const TokensInfoContext = createContext<ContextProps>(defValues);
 
@@ -28,6 +37,7 @@ const TokensInfoContextProvider = ({ children }: PropsWithChildren) => {
 
   const [tokens, setTokens] = useState<Array<any>|undefined>(undefined)
   const [selectedToken, setSelectedToken] = useState<Token|undefined>(undefined)
+  const [currencyQuantity, setCurrencyQuantity] = useState<string>('') // ← Agregar
 
   const { data: tokensArray, status: tokensFetchStatus } = useReadContract({
     address: process.env.NEXT_PUBLIC_PRESALE_ADDRESS as `0x${string}`,
@@ -61,7 +71,9 @@ const TokensInfoContextProvider = ({ children }: PropsWithChildren) => {
     tokens,
     tokensFetchStatus,
     selectedToken,
-    setSelectedToken
+    setSelectedToken,
+    currencyQuantity,
+    setCurrencyQuantity
   }}>{children}</TokensInfoContext>;
 };
 

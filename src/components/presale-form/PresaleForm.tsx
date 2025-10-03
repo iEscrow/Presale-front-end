@@ -13,6 +13,7 @@ import TokenPrice from "./TokenPrice";
 import useNetStatus from "@/hooks/useNetStatus";
 import { TokensInfoContextProvider } from "@/contexts/TokensInfoContext";
 import CurrencyList from "./CurrencyList";
+import { ESCROW_USD_VALUE } from "@/utils";
 
 export type Currency = {
   name: string;
@@ -72,7 +73,7 @@ const PresaleForm = () => {
   return (
     <form id="presale-form" className="relative max-w-[720px] py-4 px-4 md:px-6 md:py-8 mb-4 rounded-md border-[1px] border-body-text overflow-hidden">
       <FormTitle/>
-      <TokenPrice title="1 $ESCROW" subtitle="$0.015"/>
+      <TokenPrice title={ESCROW_USD_VALUE + ' $ESCROW'} subtitle="$0.015"/>
       <SupplyStatus/>
       <div className="w-full h-[1px] m:my-8 my-4 bg-body-text rounded-l-full rounded-r-full"></div>
       <TokensInfoContextProvider>
@@ -80,19 +81,14 @@ const PresaleForm = () => {
           <h2 className="text-bg-logo font-semibold text-sm md:text-base">You deposit</h2>
           <CurrencyList/>
           <CurrentBalance/>
-          <CurrencyInput
-            currencyBalance={2.3456}
-            currencyIconURL="img/currencies/ETH.png"
-            currencySymbol="ETH"
-            usdValue={1850}
-          />
+          <CurrencyInput/>
           <GasFee/>
         </div>
+        <TokenPrice title="You will receive" subtitle="166K $ESCROW"/>
+        <TokenBalance/>
+        <button className="w-full py-3 md:py-4 mt-4 font-medium border-[1px] border-bg-logo text-bg-logo text-sm md:text-base tracking-tight rounded-l-full rounded-r-full cursor-pointer duration-200 hover:text-black hover:border-bg-logo hover:bg-bg-logo" type="submit">Get verified to buy</button>
+        <TermsCheckbox/>
       </TokensInfoContextProvider>
-      <TokenPrice title="You will receive" subtitle="166K $ESCROW"/>
-      <TokenBalance/>
-      <button className="w-full py-3 md:py-4 mt-4 font-medium border-[1px] border-bg-logo text-bg-logo text-sm md:text-base tracking-tight rounded-l-full rounded-r-full cursor-pointer duration-200 hover:text-black hover:border-bg-logo hover:bg-bg-logo" type="submit">Get verified to buy</button>
-      <TermsCheckbox/>
       <img id="bg-form" src="/img/form-bg.jpg" className="absolute opacity-15 w-full h-full inset-0 -z-50" alt="" />
     </form>
   );
