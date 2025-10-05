@@ -7,34 +7,28 @@ import { ABIS, PRESALE_SUPPLY } from "@/utils";
 export const usePresaleSupply = () => {
   const chainId = useChainId();
 
-  const { data: remainingTokens, status } = useReadContract({
+  const { data: remainingTokens, status, queryKey } = useReadContract({
     address: process.env.NEXT_PUBLIC_PRESALE_ADDRESS as `0x${string}`,
     abi: ABIS.PRESALE,
     functionName: 'getRemainingTokens',
     chainId,
     query: {
       enabled: Boolean(chainId),
-      refetchInterval: 1000 * 60 * 5
+      refetchInterval: 1000 * 60 * 5,
     }
   });
 
-  const remainingTokensFormatted = useMemo(() => {
-    return remainingTokens 
+  const remainingTokensFormatted = remainingTokens 
       ? parseFloat(formatUnits(remainingTokens as bigint, 18))
       : 0;
-  }, [remainingTokens]);
 
-  const soldTokens = useMemo(() => {
-    return remainingTokens
+  const soldTokens = remainingTokens
       ? PRESALE_SUPPLY - parseFloat(formatUnits(remainingTokens as bigint, 18))
       : 0;
-  }, [remainingTokens]);
 
-  const percentageSold = useMemo(() => {
-    return remainingTokens 
-      ? Math.floor((soldTokens / PRESALE_SUPPLY) * 100)
+  const percentageSold = remainingTokens 
+      ? (soldTokens / PRESALE_SUPPLY) * 100
       : 0;
-  }, [remainingTokens, soldTokens]);
 
   return {
     remainingTokens: remainingTokensFormatted,

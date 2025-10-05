@@ -89,7 +89,7 @@ const setMaxPossibleTokens = () => {
           disabled={!selectedToken}
         />
         <span key={tokenUSDValue} className="w-full text-[12px] md:text-sm text-bg-logo font-light text-left animate-appear">
-          $ {tokenUSDValue !== null ? tokenUSDValue.toFixed(4) : '---'}
+          $ {tokenUSDValue !== null ? tokenUSDValue.toFixed(4) : '0'}
         </span>
       </div>
       <button 

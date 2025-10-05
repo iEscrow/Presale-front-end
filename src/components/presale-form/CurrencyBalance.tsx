@@ -1,11 +1,13 @@
 import { useCurrencyBalance } from "@/hooks/useCurrencyBalance";
+import useNetStatus from "@/hooks/useNetStatus";
 
-const CurrentBalance = () => {
+const CurrencyBalance = () => {
   const { formattedBalance, isLoading, selectedToken } = useCurrencyBalance();
+  const { status } = useNetStatus()
 
   const displayBalance = () => {
+    if(status === 'disconnected') return '-'
     if (!selectedToken) return 'No token selected.';
-    if(!formattedBalance) return '-'
     if (isLoading) return 'loading...';
     return formattedBalance;
   };
@@ -27,4 +29,4 @@ const CurrentBalance = () => {
   );
 }
  
-export default CurrentBalance;
+export default CurrencyBalance;

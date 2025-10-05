@@ -19,7 +19,7 @@ const config: HardhatUserConfig = {
         blockNumber: 23478305, // <- I made a fork from a specific block to avoid issues with tests and to allow hardhat to cache the state
         enabled: true,
       },
-      chainId: 1,
+      chainId: 31337,
       accounts: {
         count: 5,
       },

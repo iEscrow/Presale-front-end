@@ -1,3 +1,5 @@
+import { Token } from "./contexts/TokensInfoContext"
+
 export const ABIS = {
   UNITY_FINANCE: [
     {
@@ -1763,3 +1765,55 @@ export const PRESALE_SUPPLY = 5_000_000_000
 export const ESCROW_USD_VALUE = 0.015
 
 export const USD_DECIMALS = 8
+
+export const PLACEHOLDER_TOKENS: Token[] = [
+  {
+    address: '0x0000000000000000000000000000000000000000',
+    symbol: 'ETH',
+    price: 420000000000n,
+    maxPurchaseLimit: 1000000000000n,
+    isActive: true
+  },
+  {
+    address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+    symbol: 'WETH',
+    price: 420000000000n,
+    maxPurchaseLimit: 1000000000000n,
+    isActive: true
+  },
+  {
+    address: '0x418D75f65a02b3D53B2418FB8E1fe493759c7605',
+    symbol: 'WBNB',
+    price: 100000000000n,
+    maxPurchaseLimit: 1000000000000n,
+    isActive: true
+  },
+  {
+    address: '0x514910771AF9Ca656af840dff83E8264EcF986CA',
+    symbol: 'LINK',
+    price: 2000000000n,
+    maxPurchaseLimit: 1000000000000n,
+    isActive: true
+  },
+  {
+    address: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
+    symbol: 'WBTC',
+    price: 4500000000000n,
+    maxPurchaseLimit: 1000000000000n,
+    isActive: true
+  },
+  {
+    address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+    symbol: 'USDC',
+    price: 100000000n,
+    maxPurchaseLimit: 1000000000000n,
+    isActive: true
+  },
+  {
+    address: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+    symbol: 'USDT',
+    price: 100000000n,
+    maxPurchaseLimit: 1000000000000n,
+    isActive: true
+  }
+];
