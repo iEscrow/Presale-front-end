@@ -1,4 +1,5 @@
 import PresaleForm from "../components/presale-form/PresaleForm";
+import './globals.css'
 
 export default function Home() {
   return (

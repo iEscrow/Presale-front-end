@@ -37,7 +37,7 @@ const PresaleForm = () => {
         <SubmitBtn/>
         <TermsCheckbox/>
       </TokensInfoContextProvider>
-      <img id="bg-form" src="/img/form-bg.jpg" className="absolute opacity-15 w-full h-full inset-0 -z-50" alt="" />
+      <img id="bg-form" src="/img/form-bg-3.png" className="absolute w-full h-full inset-0 -z-50" alt="" />
     </form>
   );
 }

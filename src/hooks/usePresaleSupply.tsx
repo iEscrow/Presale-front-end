@@ -3,12 +3,13 @@ import { useMemo } from "react";
 import { formatUnits } from "viem";
 import { useChainId, useReadContract } from "wagmi";
 import { ABIS, PRESALE_SUPPLY } from "@/utils";
+import { Address } from "@/globalTypes";
 
 export const usePresaleSupply = () => {
   const chainId = useChainId();
 
   const { data: remainingTokens, status, queryKey } = useReadContract({
-    address: process.env.NEXT_PUBLIC_PRESALE_ADDRESS as `0x${string}`,
+    address: process.env.NEXT_PUBLIC_PRESALE_ADDRESS as Address,
     abi: ABIS.PRESALE,
     functionName: 'getRemainingTokens',
     chainId,

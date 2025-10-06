@@ -3,7 +3,7 @@
 import { usePresaleSupply } from "@/hooks/usePresaleSupply";
 
 const SupplyStatus = () => {
-  const { 
+  const {
     remainingTokens, 
     soldTokens, 
     percentageSold 
@@ -17,7 +17,7 @@ const SupplyStatus = () => {
     } else if (num >= 1_000_000) {
       return (num / 1_000_000).toFixed(2) + 'M';
     } else {
-      return num.toString();
+      return num.toFixed(2);
     }
   }
 

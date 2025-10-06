@@ -3,7 +3,7 @@
 import { connectorsForWallets, darkTheme, getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { coinbaseWallet, metaMaskWallet, phantomWallet, trustWallet, walletConnectWallet } from "@rainbow-me/rainbowkit/wallets";
 import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
-import { PropsWithChildren, useEffect } from "react";
+import { PropsWithChildren } from "react";
 import { defineChain } from "viem/chains/utils";
 import { WagmiProvider, createConfig, http, useAccountEffect, useDisconnect } from "wagmi";
 import { base, mainnet } from "wagmi/chains";
@@ -30,7 +30,6 @@ export const hardhat = defineChain({
 
 let transports = {
   [mainnet.id]: http(),
-  [base.id]: http(),
 }
 
 if(process.env.NEXT_PUBLIC_ENVIRONMENT === 'development') {
@@ -54,7 +53,7 @@ const connectors = connectorsForWallets(
 export const config = createConfig({
   ...getDefaultConfig({
     appName: 'My RainbowKit App',
-    chains: process.env.NEXT_PUBLIC_ENVIRONMENT === 'development' ? [mainnet, base, hardhat] : [mainnet, base],
+    chains: process.env.NEXT_PUBLIC_ENVIRONMENT === 'development' ? [mainnet, hardhat] : [mainnet],
     projectId: 'YOUR_PROJECT_ID',
   }),
   transports: transports as any,

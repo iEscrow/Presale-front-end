@@ -8,6 +8,7 @@ import { parseUnits } from "viem";
 import { ABIS, TOKEN_DECIMALS, TokenDecimals } from "@/utils";
 import { useConfig } from "wagmi";
 import { InvalidateQueryFilters, useQueryClient } from "@tanstack/react-query";
+import { Address } from "@/globalTypes";
 
 const SubmitBtn = () => {
 
@@ -19,7 +20,7 @@ const SubmitBtn = () => {
   const client = useQueryClient()
   const config = useConfig()
 
-  const PRESALE_ADDRESS = process.env.NEXT_PUBLIC_PRESALE_ADDRESS as `0x${string}`;
+  const PRESALE_ADDRESS = process.env.NEXT_PUBLIC_PRESALE_ADDRESS as Address;
 
   // Fetch allowance cuando cambie el token o usuario
   useEffect(() => {
@@ -49,7 +50,7 @@ const SubmitBtn = () => {
 
   const btnDisabled = useMemo(() => {
     if (isProcessing) return true;
-    
+
     return (
       !termsAccepted ||
       !currencyQuantity ||
@@ -123,15 +124,22 @@ const SubmitBtn = () => {
       const decimals = TOKEN_DECIMALS[selectedToken.symbol as keyof TokenDecimals]
       const amount = parseUnits(currencyQuantity, decimals)
 
-      let hash: `0x${string}`
+      let hash: Address
 
       if (selectedToken.symbol === 'ETH') {
+        const gasBuffer = await readContract(config, {
+          address: PRESALE_ADDRESS,
+          abi: ABIS.PRESALE,
+          functionName: 'gasBuffer',
+          chainId
+        }) as bigint;
+
         hash = await writeContract(config, {
           address: PRESALE_ADDRESS,
           abi: ABIS.PRESALE,
-          functionName: 'buyWithNative',
+          functionName: 'buyWithNativeFixed', // ← Cambio aquí
           args: [userAddress],
-          value: amount,
+          value: amount + gasBuffer, // ← Monto + buffer fijo
           chainId
         })
       } else {

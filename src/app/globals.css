@@ -29,6 +29,7 @@
   --animate-rotate-clockwise: rotateClockwise 20s linear infinite;
   --animate-appear: appear 200ms ease-out forwards;
   --animate-rotate-quarter-x: rotateQuarterX 400ms ease-out forwards;
+  --animate-rotate-x-and-y: rotateQuarterXandY 1s cubic-bezier(0,.82,.34,1) forwards;
 }
 
 .escrow-text-gradient {
@@ -62,7 +63,8 @@ input[type="number"]:focus {
 }
 
 #bg-form {
-  mask-image: linear-gradient(20deg, #1010103f 0%, transparent 40%, transparent 60%, #10101059 100%);
+  mask-image: linear-gradient(-45deg, #00000085 0%, rgba(0, 0, 0, 0.1) 40%, rgba(0, 0, 0, 0.1) 60%, #00000085 100%);
+  filter: saturate(2);
 }
 
 @keyframes rotateClockwise {
@@ -89,6 +91,15 @@ input[type="number"]:focus {
   }
   to {
     transform: rotateX(0)
+  }
+}
+
+@keyframes rotateQuarterXandY {
+  from {
+    transform: rotate3d(.75, .75, .5, 360deg)
+  }
+  to {
+    transform: rotate3d(0, 0, 0, 360deg)
   }
 }
 

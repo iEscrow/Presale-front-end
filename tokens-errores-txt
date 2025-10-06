@@ -1,0 +1,10 @@
+Caused by: ContractFunctionRevertedError: The contract function "buyWithToken" reverted with the following reason:
+Internal JSON-RPC error.
+
+USDT: error,
+USDC: correcto,
+WBTC: correcto,
+LINK: correcto,
+WBNB: correcto,
+WETH: correcto,
+ETH: error

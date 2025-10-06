@@ -1,9 +1,10 @@
+import { Address } from '@/globalTypes';
 import { ABIS, TokenDecimals } from '@/utils';
 import React, { createContext, useState, PropsWithChildren, useEffect, Dispatch, SetStateAction } from 'react';
 import { useAccount, useChainId, useReadContract } from 'wagmi';
 
 type ContextProps = {
-  address: `0x${string}` | undefined,
+  address: Address | undefined,
   tokens: Array<Token>|undefined,
   tokensFetchStatus: "error" | "success" | "pending",
   isFetchingTokens: boolean,
@@ -16,7 +17,7 @@ type ContextProps = {
 }
 
 export type Token = {
-  address: `0x${string}`,
+  address: Address,
   symbol: keyof TokenDecimals,
   price: bigint,
   maxPurchaseLimit: bigint,
@@ -49,7 +50,7 @@ const TokensInfoContextProvider = ({ children }: PropsWithChildren) => {
   const [termsAccepted, setTermsAccepted] = useState<boolean>(false)
 
   const { data: tokensArray, status: tokensFetchStatus, isFetching: isFetchingTokens, isEnabled } = useReadContract({
-    address: process.env.NEXT_PUBLIC_PRESALE_ADDRESS as `0x${string}`,
+    address: process.env.NEXT_PUBLIC_PRESALE_ADDRESS as Address,
     chainId,
     abi: ABIS.PRESALE,
     functionName: 'getSupportedTokens',

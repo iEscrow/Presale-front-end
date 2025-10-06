@@ -3,6 +3,7 @@ import { useAccount, useBalance, useChainId, useReadContract } from "wagmi";
 import { formatUnits } from "viem/utils";
 import { TokensInfoContext } from "@/contexts/TokensInfoContext";
 import { ABIS, TOKEN_DECIMALS, USD_DECIMALS, TokenDecimals } from "@/utils";
+import { Address } from "@/globalTypes";
 
 export const useCurrencyBalance = () => {
   const { selectedToken, currencyQuantity, setCurrencyQuantity } = use(TokensInfoContext);
@@ -10,7 +11,7 @@ export const useCurrencyBalance = () => {
   const { address: userAddress } = useAccount();
 
   const { data: tokenBalance, isLoading: isTokenLoading } = useReadContract({
-    address: selectedToken?.address as `0x${string}`,
+    address: selectedToken?.address as Address,
     abi: ABIS.ERC20,
     chainId,
     functionName: 'balanceOf',
