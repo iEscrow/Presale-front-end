@@ -14,9 +14,8 @@ import TokensToReceive from "./TokensToReceive";
 import SubmitBtn from "./SubmitBtn";
 
 const PresaleForm = () => {
-
   return (
-    <form id="presale-form" className="relative max-w-[720px] py-4 px-4 md:px-6 md:py-8 mb-4 rounded-md border-[1px] border-body-text overflow-hidden">
+    <form id="presale-form" className="relative max-w-[720px] py-4 px-4 md:px-6 md:py-8 mb-4 rounded-md border-[1px] border-body-text bg-linear-245 from-black from-50% to-logo-grad-blue/40 overflow-hidden">
       <FormTitle/>
       <WithLines>
         <span className="text-base lg:text-md font-semibold text-bg-logo mb-1 rounded-l-full rounded-r-full"> {'1 $ESCROW'} </span>
@@ -37,7 +36,7 @@ const PresaleForm = () => {
         <SubmitBtn/>
         <TermsCheckbox/>
       </TokensInfoContextProvider>
-      <img id="bg-form" src="/img/form-bg-3.png" className="absolute w-full h-full inset-0 -z-50" alt="" />
+      <div id="bg-form" className="absolute opacity-50 w-full h-full inset-0 -z-50 bg-linear-245 from-black from-50% to-logo-grad-blue/40" />
     </form>
   );
 }

@@ -9,6 +9,9 @@ import { WagmiProvider, createConfig, http, useAccountEffect, useDisconnect } fr
 import { base, mainnet } from "wagmi/chains";
 import { GetSiweMessageOptions, RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth';
 import { SessionProvider, signOut } from 'next-auth/react';
+import { HttpTransport } from "viem";
+import { GenericIndexable } from "@/globalTypes";
+import { PresaleStatusProvider } from "@/contexts/PresaleStatusContext";
 
 export const hardhat = defineChain({
   id: 31337,
@@ -28,12 +31,11 @@ export const hardhat = defineChain({
   },
 })
 
-let transports = {
+let transports: GenericIndexable<HttpTransport<undefined, false>> = {
   [mainnet.id]: http(),
 }
 
 if(process.env.NEXT_PUBLIC_ENVIRONMENT === 'development') {
-  // @ts-ignore
   transports[hardhat.id] = http()
 }
 
@@ -41,7 +43,7 @@ const connectors = connectorsForWallets(
   [
     {
       groupName: 'Recommended',
-      wallets: [walletConnectWallet, coinbaseWallet, metaMaskWallet, trustWallet, phantomWallet],
+      wallets: [walletConnectWallet, metaMaskWallet, trustWallet, phantomWallet],
     },
   ],
   {
@@ -90,7 +92,9 @@ const ProvidersWrapper = ({ children }: PropsWithChildren) => {
           <RainbowKitSiweNextAuthProvider getSiweMessageOptions={getSiweMessageOptions}>
             <RainbowKitProvider theme={darkTheme()} modalSize="compact">
               <DisconnectHandler />
-              { children }
+              <PresaleStatusProvider>
+                { children }
+              </PresaleStatusProvider>
             </RainbowKitProvider>
           </RainbowKitSiweNextAuthProvider>
         </QueryClientProvider>
