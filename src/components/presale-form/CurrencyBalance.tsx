@@ -6,7 +6,7 @@ const CurrencyBalance = () => {
   const { status } = useNetStatus()
 
   const displayBalance = () => {
-    if(status === 'disconnected') return '-'
+    if(status !== 'connected') return '-'
     if(!selectedToken) return 'No token selected.';
     return formattedBalance;
   };

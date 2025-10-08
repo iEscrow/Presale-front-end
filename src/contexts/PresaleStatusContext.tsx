@@ -1,62 +1,86 @@
 // contexts/PresaleStatusContext.tsx
-import { createContext, PropsWithChildren, useEffect } from 'react';
-import { useReadContract, useWatchContractEvent } from 'wagmi';
-import { ABIS } from '@/utils';
-import { Indexable, PresaleStatus } from '@/globalTypes';
-import { formatUnits } from 'viem/utils';
+import { createContext, PropsWithChildren, useEffect, useState } from "react";
+import { usePublicClient, useWatchContractEvent } from "wagmi";
+import { ABIS } from "@/utils";
+import { Indexable, PresaleStatus } from "@/globalTypes";
+import { formatUnits } from "viem/utils";
 
 type ContextProps = {
   presaleStatus: PresaleStatus | null;
   isLoading: boolean;
-}
+};
 
 const PresaleStatusContext = createContext<ContextProps>({
   presaleStatus: null,
-  isLoading: true
+  isLoading: true,
 });
 
 const PresaleStatusProvider = ({ children }: PropsWithChildren) => {
   const PRESALE_ADDRESS = process.env.NEXT_PUBLIC_PRESALE_ADDRESS as `0x${string}`;
+  const publicClient = usePublicClient({
+    chainId: process.env.NEXT_PUBLIC_ENVIRONMENT === 'development' ? 31337 : 1
+  });
 
-  const { data, isLoading, refetch: refetchPresaleStatus } = useReadContract({
-    address: PRESALE_ADDRESS,
-    abi: ABIS.PRESALE,
-    functionName: 'getPresaleStatus',
-    query: {
-      refetchInterval: 30000
+  const [presaleStatus, setPresaleStatus] = useState<PresaleStatus | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchPresaleStatus = async () => {
+    if (!publicClient) return;
+
+    try {
+      setIsLoading(true);
+      const data = (await publicClient.readContract({
+        address: PRESALE_ADDRESS,
+        abi: ABIS.PRESALE,
+        functionName: "getPresaleStatus",
+      })) as Indexable;
+
+      const parsed: PresaleStatus = {
+        hasStarted: data[0] as boolean,
+        hasEnded: data[1] as boolean,
+        startTime: formatUnits(data[2] as bigint, 0),
+        endTime: formatUnits(data[3] as bigint, 0),
+        isActive:
+          (data[0] as boolean) &&
+          !(data[1] as boolean) &&
+          Math.floor(Date.now() / 1000) <= Number(data[3]),
+        canClaim: data[1] as boolean,
+      };
+
+      setPresaleStatus(parsed);
+    } catch (error) {
+      console.error("Error fetching presale status:", error);
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  // Efecto inicial + refetch periódico
+  useEffect(() => {
+    fetchPresaleStatus();
+    const interval = setInterval(fetchPresaleStatus, 30000);
+    return () => clearInterval(interval);
+  }, [publicClient]);
+
+  // Escuchar eventos on-chain y actualizar en tiempo real
+  useWatchContractEvent({
+    address: PRESALE_ADDRESS,
+    abi: ABIS.PRESALE,
+    eventName: "PresaleStarted",
+    onLogs: fetchPresaleStatus,
   });
 
   useWatchContractEvent({
     address: PRESALE_ADDRESS,
     abi: ABIS.PRESALE,
-    eventName: 'PresaleStarted',
-    onLogs: () => refetchPresaleStatus()
+    eventName: "PresaleEnded",
+    onLogs: fetchPresaleStatus,
   });
-
-  useWatchContractEvent({
-    address: PRESALE_ADDRESS,
-    abi: ABIS.PRESALE,
-    eventName: 'PresaleEnded',
-    onLogs: () => refetchPresaleStatus()
-  });
-
-  const presaleStatus: PresaleStatus | null = data ? {
-    hasStarted: (data as Indexable)[0] as boolean,
-    hasEnded: (data as Indexable)[1] as boolean,
-    startTime: formatUnits((data as Indexable)[2] as bigint, 0),
-    endTime: formatUnits((data as Indexable)[3] as bigint, 0),
-    isActive: ((data as Indexable)[0] as boolean) && !((data as Indexable)[1] as boolean) && 
-              Math.floor(Date.now() / 1000) <= Number((data as Indexable)[3]),
-    canClaim: (data as Indexable)[1] as boolean
-  } : null;
-
-  console.log(presaleStatus)
 
   return (
-    <PresaleStatusContext value={{ presaleStatus, isLoading }}>
+    <PresaleStatusContext.Provider value={{ presaleStatus, isLoading }}>
       {children}
-    </PresaleStatusContext>
+    </PresaleStatusContext.Provider>
   );
 };
 

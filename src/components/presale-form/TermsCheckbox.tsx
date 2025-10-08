@@ -15,7 +15,7 @@ const TermsCheckbox = () => {
       <div
         className={`size-6 ml-2 flex items-center justify-center border-[1px] rounded-md transition-colors duration-200 ${termsAccepted
             ? 'bg-bg-logo border-bg-logo'
-            : 'border-body-text hover:border-bg-logo'
+            : 'border-gray hover:border-bg-logo'
           }`}
       >
         {termsAccepted && (

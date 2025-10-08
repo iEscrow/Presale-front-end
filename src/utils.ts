@@ -1817,3 +1817,19 @@ export const PLACEHOLDER_TOKENS: Token[] = [
     isActive: true
   }
 ];
+
+export const formatTimestampToUTC = (timestamp: string | bigint): string => {
+  const ts = typeof timestamp === 'bigint' ? Number(timestamp) : parseInt(timestamp);
+  const date = new Date(ts * 1000);
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'UTC',
+    timeZoneName: 'short'
+  };
+  
+  return date.toLocaleString('en-US', options);
+};

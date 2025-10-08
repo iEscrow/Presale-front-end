@@ -3,18 +3,22 @@ import { use } from "react";
 import CurrencyRadio from "./CurrencyRadio";
 import { PLACEHOLDER_TOKENS } from "@/utils";
 import CurrenciesPlaceholder from "./CurrenciesPlaceholder";
-import { Triangle } from "react-loader-spinner";
+import useNetStatus from "@/hooks/useNetStatus";
+import { PuffLoader } from "react-spinners";
+import { useWindowSize } from "@uidotdev/usehooks";
 
 const CurrencyList = () => {
 
   const { address, tokens, tokensFetchStatus, isFetchingTokens } = use(TokensInfoContext)
+  const { status } = useNetStatus()
+  const { width } = useWindowSize()
 
   const getTokens = () => {
-    if (!address || tokensFetchStatus !== 'success' || !Array.isArray(tokens)) return PLACEHOLDER_TOKENS
+    if (!address || tokensFetchStatus !== 'success' || !Array.isArray(tokens) || status !== 'connected') return PLACEHOLDER_TOKENS
     return tokens
   }
 
-  const shouldShowPlaceholder = !address || isFetchingTokens
+  const shouldShowPlaceholder = !address || isFetchingTokens || status !== 'connected'
 
   return (
     <div className="relative min-h-[180px] flex items-center justify-center">
@@ -30,12 +34,10 @@ const CurrencyList = () => {
             </CurrenciesPlaceholder>
           ) : (
             <CurrenciesPlaceholder text="Loading tokens...">
-              <Triangle
+              <PuffLoader
                 color="#FFF"
-                height={50}
-                width={50}
-                wrapperClass="mb-2"
-                ariaLabel="Loading token list"
+                size={(width || 1000) >= 768 ? 50 : 40}
+                className="mb-2"
               />
             </CurrenciesPlaceholder>
           )}

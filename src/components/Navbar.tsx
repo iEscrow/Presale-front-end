@@ -4,10 +4,13 @@ import Image from "next/image";
 import CustomConnectButton from "./CustomConnectButton";
 import useNetStatus from "@/hooks/useNetStatus";
 import { PulseLoader } from "react-spinners";
+import { use } from "react";
+import { PresaleStatusContext } from "@/contexts/PresaleStatusContext";
 
 const NavBar = () => {
 
   const { status } = useNetStatus()
+  const { isLoading, presaleStatus } = use(PresaleStatusContext)
 
   return (
     <header className="h-[35px] md:h-[38px] sticky flex flex-col items-center justify-between w-full top-0 px-2 md:px-4 md:pt-1 pt-[3px] box-border z-50 bg-[#101010] sizing-border">
@@ -17,15 +20,15 @@ const NavBar = () => {
           <h1 className="text-bg-logo font-semibold">iEscrow</h1>
         </div>
         {
-          status === 'loading' ?
+          status === 'loading' || isLoading ?
             <div className="flex items-center justify-center h-7 px-2 md:px4 py-[2px] md:py-1">
               <PulseLoader
                 color="#EAE9E9"
                 size={12}
                 speedMultiplier={.8}
               />
-            </div> :
-            <CustomConnectButton />
+            </div> : (presaleStatus!.hasStarted) ?
+            <CustomConnectButton /> : <div className="h-7"></div>
         }
 
       </div>

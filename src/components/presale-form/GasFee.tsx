@@ -18,8 +18,7 @@ const GasFee = () => {
         />
         {
           isPopoverOpen &&
-          <div className="absolute w-52 md:w-64 inset-x-0 bottom-[calc(100%+6px)] p-2 md:p-3 bg-black/95 animate-appear tracking-tight rounded-sm border-[1px] border-dark-gray pointer-events-none">
-            <h1 className="block mb-1 md:mb-2 w-full md:text-sm text-xs font-medium text-bg-logo text-center">Gas Fee estimation</h1>
+          <div className="absolute w-52 md:w-64 inset-x-0 bottom-[calc(100%+6px)] p-2 md:p-3 bg-black/95 animate-appear rounded-sm border-[1px] border-dark-gray pointer-events-none">
             <p className="block w-full md:text-sm text-xs font-light text-bg-logo leading-tight">
               This gas calculation is only a estimation.
               You wallet will set the price of the transation.

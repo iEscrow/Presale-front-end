@@ -1,17 +1,18 @@
-import { TokensInfoContext } from "@/contexts/TokensInfoContext"
 import { useCurrencyBalance } from "@/hooks/useCurrencyBalance"
 import { ESCROW_USD_VALUE, USD_DECIMALS } from "@/utils"
-import { use } from "react"
 import { formatUnits } from "viem/utils"
 import WithLines from "./WithLines"
 
 const TokensToReceive = () => {
 
-  const { selectedToken } = useCurrencyBalance()
-  const { currencyQuantity } = use(TokensInfoContext)
+  const { selectedToken, currencyQuantity, maxPossibleValue } = useCurrencyBalance()
 
   const getESCROWQuantity = () => {
-    if (selectedToken === undefined || Number.isNaN(parseInt(currencyQuantity))) return '0'
+    if (
+      selectedToken === undefined || 
+      Number.isNaN(parseInt(currencyQuantity)) ||
+      parseFloat(currencyQuantity) > parseFloat(maxPossibleValue)
+    ) return '0'
     const tokenUSDPrice = parseFloat(formatUnits(selectedToken.price, USD_DECIMALS))
     const tokenQuantity = parseFloat(currencyQuantity)
     return ((tokenQuantity * tokenUSDPrice) / ESCROW_USD_VALUE).toFixed(4)

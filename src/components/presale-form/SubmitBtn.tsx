@@ -9,10 +9,13 @@ import { ABIS, TOKEN_DECIMALS, TokenDecimals } from "@/utils";
 import { useConfig } from "wagmi";
 import { InvalidateQueryFilters, useQueryClient } from "@tanstack/react-query";
 import { Address } from "@/globalTypes";
+import toast from "react-hot-toast";
+import { useCurrencyBalance } from "@/hooks/useCurrencyBalance";
 
 const SubmitBtn = () => {
 
-  const { currencyQuantity, selectedToken, termsAccepted } = use(TokensInfoContext)
+  const { selectedToken, termsAccepted } = use(TokensInfoContext)
+  const { currencyQuantity, maxPossibleValue } = useCurrencyBalance()
   const { status: netStatus, address: userAddress, chainId } = useNetStatus()
   const [btnText, setBtnText] = useState<'Buy' | 'Approve Allowance' | 'Finalizing purchase'>('Buy')
   const [isProcessing, setIsProcessing] = useState(false)
@@ -22,7 +25,6 @@ const SubmitBtn = () => {
 
   const PRESALE_ADDRESS = process.env.NEXT_PUBLIC_PRESALE_ADDRESS as Address;
 
-  // Fetch allowance cuando cambie el token o usuario
   useEffect(() => {
     if (!selectedToken || !userAddress || selectedToken.symbol === 'ETH') {
       setAllowance(0n)
@@ -46,7 +48,7 @@ const SubmitBtn = () => {
     }
 
     fetchAllowance()
-  }, [selectedToken, userAddress, chainId])
+  }, [selectedToken, userAddress, chainId, currencyQuantity])
 
   const btnDisabled = useMemo(() => {
     if (isProcessing) return true;
@@ -58,9 +60,10 @@ const SubmitBtn = () => {
       parseFloat(currencyQuantity) <= 0 ||
       netStatus === 'disconnected' ||
       netStatus === 'loading' ||
-      !selectedToken
+      !selectedToken ||
+      parseFloat(currencyQuantity) > parseFloat(maxPossibleValue)
     );
-  }, [termsAccepted, currencyQuantity, netStatus, selectedToken, isProcessing]);
+  }, [termsAccepted, currencyQuantity, netStatus, selectedToken, isProcessing, maxPossibleValue]);
 
   const needsApproval = () => {
     if (!selectedToken || selectedToken.symbol === 'ETH' || !currencyQuantity) return false
@@ -68,7 +71,7 @@ const SubmitBtn = () => {
     try {
       const decimals = TOKEN_DECIMALS[selectedToken.symbol as keyof TokenDecimals]
       const amountNeeded = parseUnits(currencyQuantity, decimals)
-      return allowance < amountNeeded
+      return allowance !== amountNeeded
     } catch {
       return false
     }
@@ -76,10 +79,12 @@ const SubmitBtn = () => {
 
   const handleApprove = async () => {
     if (!selectedToken || !userAddress) return
+    let allowToastLoadingID: string = ''
 
     try {
       setIsProcessing(true)
       setBtnText('Approve Allowance')
+      allowToastLoadingID = toast.loading('Processing allowance...', { duration: Infinity })
 
       const decimals = TOKEN_DECIMALS[selectedToken.symbol as keyof TokenDecimals]
       const amount = parseUnits(currencyQuantity, decimals)
@@ -94,7 +99,6 @@ const SubmitBtn = () => {
 
       await waitForTransactionReceipt(config, { hash, chainId })
 
-      // Actualizar allowance
       const newAllowance = await readContract(config, {
         address: selectedToken.address,
         abi: ABIS.ERC20,
@@ -104,22 +108,27 @@ const SubmitBtn = () => {
       })
       setAllowance(newAllowance as bigint)
 
-      // Proceder con la compra automáticamente
+      toast.dismiss(allowToastLoadingID)
+      toast.success('Allowance approved', { duration: 4000 })
       await executeBuy()
 
     } catch (error) {
       console.error('Approve error:', error)
       setBtnText('Buy')
       setIsProcessing(false)
+      toast.dismiss(allowToastLoadingID)
+      toast.error('Allowance not approved')
     }
   }
 
   const executeBuy = async () => {
     if (!selectedToken || !userAddress) return
+    let buyToastLoadingID: string = ''
 
     try {
       setIsProcessing(true)
       setBtnText('Finalizing purchase')
+      buyToastLoadingID = toast.loading('Processing transaction...', { duration: Infinity })
 
       const decimals = TOKEN_DECIMALS[selectedToken.symbol as keyof TokenDecimals]
       const amount = parseUnits(currencyQuantity, decimals)
@@ -137,9 +146,9 @@ const SubmitBtn = () => {
         hash = await writeContract(config, {
           address: PRESALE_ADDRESS,
           abi: ABIS.PRESALE,
-          functionName: 'buyWithNativeFixed', // ← Cambio aquí
+          functionName: 'buyWithNativeFixed',
           args: [userAddress],
-          value: amount + gasBuffer, // ← Monto + buffer fijo
+          value: amount + gasBuffer,
           chainId
         })
       } else {
@@ -154,16 +163,18 @@ const SubmitBtn = () => {
 
       await waitForTransactionReceipt(config, { hash, chainId })
 
-      // Éxito
       setBtnText('Buy')
       setIsProcessing(false)
       client.refetchQueries(['readContract'] as InvalidateQueryFilters)
-      alert('Tokens reserved!')
+      toast.success('Tokens reserved!', { duration: 4000 })
 
     } catch (error) {
       console.error('Buy error:', error)
+      toast.error('Error during transaction', { duration: 4000 })
       setBtnText('Buy')
       setIsProcessing(false)
+    } finally {
+      toast.dismiss(buyToastLoadingID)
     }
   }
 
