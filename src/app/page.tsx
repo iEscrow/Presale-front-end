@@ -9,6 +9,7 @@ import toast, { resolveValue, ToastBar, Toaster } from "react-hot-toast";
 import Toast from "@/components/Toast";
 import PresalePlaceholderWrapper from "@/components/placeholders/PresalePlaceholderWrapper";
 import FetchingPresaleStatus from "@/components/FetchingPresaleStatus";
+import PresaleEnded from "@/components/presale-ended/PresaleEnded";
 
 export default function Home() {
 
@@ -16,9 +17,12 @@ export default function Home() {
 
   return (
     <div className="relative w-auto overflow-clip px-2 md:px-4 py-4 flex items-center justify-center">
-      {/* <PresaleForm /> */}
+      <PresaleForm />
       {/* <PresalePlaceholderWrapper withBg={false} >
         <FetchingPresaleStatus/>
+      </PresalePlaceholderWrapper> */}
+      {/* <PresalePlaceholderWrapper>
+        <PresaleEnded/>
       </PresalePlaceholderWrapper> */}
       <Toast/>
     </div>

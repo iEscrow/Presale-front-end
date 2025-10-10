@@ -12,6 +12,7 @@ import { SessionProvider, signOut } from 'next-auth/react';
 import { HttpTransport } from "viem";
 import { GenericIndexable } from "@/globalTypes";
 import { PresaleStatusProvider } from "@/contexts/PresaleStatusContext";
+import SumsubWebSdk from '@sumsub/websdk-react'
 
 export const hardhat = defineChain({
   id: 31337,
@@ -35,7 +36,7 @@ let transports: GenericIndexable<HttpTransport<undefined, false>> = {
   [mainnet.id]: http(),
 }
 
-if(process.env.NEXT_PUBLIC_ENVIRONMENT === 'development') {
+if (process.env.NEXT_PUBLIC_ENVIRONMENT === 'development') {
   transports[hardhat.id] = http()
 }
 
@@ -73,13 +74,14 @@ function DisconnectHandler() {
       window.location.reload()
     }
   });
-  
+
   return null;
 }
 
 const getSiweMessageOptions: GetSiweMessageOptions = () => ({
   statement: 'Sign this message to confirm wallet ownership and participate in the $ESCROW presale',
 });
+
 
 const ProvidersWrapper = ({ children }: PropsWithChildren) => {
 
@@ -93,7 +95,7 @@ const ProvidersWrapper = ({ children }: PropsWithChildren) => {
             <RainbowKitProvider theme={darkTheme()} modalSize="compact">
               <DisconnectHandler />
               <PresaleStatusProvider>
-                { children }
+                {children}
               </PresaleStatusProvider>
             </RainbowKitProvider>
           </RainbowKitSiweNextAuthProvider>
@@ -102,5 +104,5 @@ const ProvidersWrapper = ({ children }: PropsWithChildren) => {
     </WagmiProvider>
   );
 }
- 
+
 export default ProvidersWrapper;
