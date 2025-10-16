@@ -58,9 +58,7 @@ const PresaleStatusProvider = ({ children }: PropsWithChildren) => {
   // Efecto inicial + refetch periódico
   useEffect(() => {
     fetchPresaleStatus();
-    const interval = setInterval(fetchPresaleStatus, 30000);
-    return () => clearInterval(interval);
-  }, [publicClient]);
+  }, []);
 
   // Escuchar eventos on-chain y actualizar en tiempo real
   useWatchContractEvent({
@@ -68,6 +66,9 @@ const PresaleStatusProvider = ({ children }: PropsWithChildren) => {
     abi: ABIS.PRESALE,
     eventName: "PresaleStarted",
     onLogs: fetchPresaleStatus,
+    batch: false,
+    pollingInterval: 900000,
+    syncConnectedChain: true
   });
 
   useWatchContractEvent({
@@ -75,6 +76,9 @@ const PresaleStatusProvider = ({ children }: PropsWithChildren) => {
     abi: ABIS.PRESALE,
     eventName: "PresaleEnded",
     onLogs: fetchPresaleStatus,
+    batch: false,
+    pollingInterval: 900000,
+    syncConnectedChain: true
   });
 
   return (

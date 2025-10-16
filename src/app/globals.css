@@ -67,6 +67,10 @@ input[type="number"]:focus {
   mix-blend-mode: lighten;
 }
 
+#bg-form-end {
+  mask-image: linear-gradient(15deg, #00000027, transparent 80%);
+}
+
 .horizontal-masked {
   mask-image: linear-gradient(to bottom, black 0%, rgba(0, 0, 0, 0.281) 40%, rgba(0, 0, 0, 0.281) 60%, black 100%);
   opacity: 0.2;

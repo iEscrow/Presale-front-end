@@ -53,6 +53,12 @@ const connectors = connectorsForWallets(
   }
 );
 
+declare module 'wagmi' {
+  interface Register {
+    config: typeof config
+  }
+}
+
 export const config = createConfig({
   ...getDefaultConfig({
     appName: 'My RainbowKit App',

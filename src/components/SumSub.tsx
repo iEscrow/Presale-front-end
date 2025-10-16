@@ -5,17 +5,17 @@ const accessToken = '_act-sbx-jwt-eyJhbGciOiJub25lIn0.eyJqdGkiOiJfYWN0LXNieC1hYz
 const SumSub = () => {
   return (
     <SumsubWebSdk
-      testEnv={true}
+      testEnv={process.env.NEXT_PUBLIC_ENVIRONMENT === 'development'}
       accessToken={accessToken}
       expirationHandler={() => Promise.resolve(accessToken)}
       config={{
         theme: 'dark',
-
       }}
       onMessage={(type, payload) => {
         console.log("WebSDK onMessage", type, payload);
       }}
       onError={(data) => console.log("onError", data)}
+      className="h-screen w-screen fixed top-0 left-0 z-[100] "
     />
   );
 }

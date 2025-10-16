@@ -413,7 +413,7 @@ export const ABIS = {
       "stateMutability": "view",
       "type": "function"
     }
-  ],
+  ] as const,
 
   PRESALE: [
     {
@@ -1512,7 +1512,7 @@ export const ABIS = {
       "stateMutability": "nonpayable",
       "type": "function"
     }
-  ],
+  ] as const,
 
   ERC20: [
     {
@@ -1735,7 +1735,7 @@ export const ABIS = {
         "name": "Transfer",
         "type": "event"
     }
-  ]
+  ] as const
 }
 
 export const ALLOWED_NETS = [1, 31337]

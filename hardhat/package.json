@@ -4,6 +4,7 @@
   "scripts": {
     "node": "npx hardhat node",
     "deploy": "npx hardhat run scripts/deploy-and-config.ts --network localhost",
+    "deploy-end-presale": "END_PRESALE=true npx hardhat run scripts/deploy-and-config.ts --network localhost",
     "compile": "npx hardhat compile"
   },
   "devDependencies": {

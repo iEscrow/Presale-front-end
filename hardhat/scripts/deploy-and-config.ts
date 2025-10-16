@@ -121,6 +121,32 @@ async function main() {
     fs.writeFileSync(deploymentPath, JSON.stringify(deploymentInfo, null, 2));
     console.log("✓ Saved to deployment.json");
 
+    // ============ Increasing Time to check presale end claim rewards ================
+    if (process.env.END_PRESALE === "true") {
+      console.log("\n[8/7] Making test purchases, increasing EVM time and ending presale...");
+
+      // Aprobar USDC para el presale
+      const usdcContract = await ethers.getContractAt("IERC20", whales.USDC.token);
+      const purchaseAmount = ethers.parseUnits("100", whales.USDC.decimals); // 100 USDC
+
+      await (await usdcContract.connect(testAccount).approve(presaleAddress, purchaseAmount)).wait();
+
+      // Comprar tokens con USDC
+      await (await presale.connect(testAccount).buyWithToken(
+        whales.USDC.token,
+        purchaseAmount,
+        testAccount.address
+      )).wait();
+      console.log("✓ Purchased tokens with 100 USDC");
+
+      console.log("\n[8/7] Ending presale and increasing time by 31 days...");
+      const timeIncrease = 31 * 24 * 60 * 60; // 31 días en segundos
+      await ethers.provider.send("evm_increaseTime", [timeIncrease]);
+      await ethers.provider.send("evm_mine", []); // Mina un bloque para aplicar el cambio
+      await (await presale.endPresale()).wait();
+      console.log("✓ Presale ended after 31 days");
+    }
+
     // ============ Summary ============
     console.log("\n" + "=".repeat(60));
     console.log("DEPLOYMENT COMPLETE");
