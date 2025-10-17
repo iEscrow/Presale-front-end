@@ -15,15 +15,23 @@ async function main() {
     console.log("Test account:", testAccount.address);
 
     // ============ Deploy Unity Token ============
-    console.log("\n[1/7] Deploying UnityFinance Token...");
+    console.log("\n Deploying UnityFinance Token...");
     const UnityFinance = await ethers.getContractFactory("UnityFinance");
     const unityToken = await UnityFinance.deploy();
     await unityToken.waitForDeployment();
     const unityTokenAddress = await unityToken.getAddress();
     console.log("✓ Unity Token:", unityTokenAddress);
 
+    // ============ Deploy Simple-KYC Contract ============
+    console.log("\n Deploying Simple-KYC Token...");
+    const simpleKYC = await ethers.getContractFactory("SimpleKYC");
+    const simpleKYCContract = await simpleKYC.deploy(deployer.address);
+    await simpleKYCContract.waitForDeployment();
+    const simpleKYCAddress = await simpleKYCContract.getAddress();
+    console.log("✓ Simple-KYC:", simpleKYCAddress);
+
     // ============ Deploy Presale Contract ============
-    console.log("\n[2/7] Deploying Presale Contract...");
+    console.log("\n Deploying Presale Contract...");
     const presaleRate = ethers.parseEther("666.666666666666666");
     const maxTokensToMint = ethers.parseEther("5000000000");
 
@@ -31,27 +39,28 @@ async function main() {
     const presale = await MultiTokenPresale.deploy(
       unityTokenAddress,
       presaleRate,
-      maxTokensToMint
+      maxTokensToMint,
+      simpleKYCAddress
     );
     await presale.waitForDeployment();
     const presaleAddress = await presale.getAddress();
     console.log("✓ Presale Contract:", presaleAddress);
 
     // ============ Whitelist & Fund Presale ============
-    console.log("\n[3/7] Configuring Presale...");
+    console.log("\n Configuring Presale...");
     await (await unityToken.enableWhitelist(presaleAddress)).wait();
     await (await unityToken.transfer(presaleAddress, maxTokensToMint)).wait();
     console.log("✓ Presale funded with 5B tokens");
 
     // ============ Start Presale ============
-    console.log("\n[4/7] Starting Presale (30 days)...");
-    const duration = 30 * 24 * 60 * 60;
+    console.log("\n Starting Presale (34 days)...");
+    const days = 34
+    const duration = days * 24 * 60 * 60;
     await (await presale.startPresale(duration)).wait();
     console.log("✓ Presale active");
 
     // ============ Fund Test Account with Tokens ============
-    console.log("\n[5/7] Funding test account with tokens from whales...");
-
+    console.log("\n Funding test account with tokens from whales...");
 
     for (const [name, config] of Object.entries(whales)) {
       // Give whale ETH for gas
@@ -76,7 +85,7 @@ async function main() {
     }
 
     // ============ Verify Balances ============
-    console.log("\n[6/7] Verifying test account balances...");
+    console.log("\n Verifying test account balances...");
 
     const balances: any = {};
     for (const [name, config] of Object.entries(whales)) {
@@ -90,7 +99,7 @@ async function main() {
     console.log(`  ETH: ${ethers.formatEther(ethBalance)}`);
 
     // ============ Save Deployment Info ============
-    console.log("\n[7/7] Saving deployment info...");
+    console.log("\n Saving deployment info...");
 
     const deploymentInfo = {
       network: "hardhat-fork",
@@ -98,6 +107,7 @@ async function main() {
       contracts: {
         unityToken: unityTokenAddress,
         presale: presaleAddress,
+        simpleKYC: simpleKYCAddress
       },
       tokens: {
         USDC: whales.USDC.token,
@@ -113,7 +123,7 @@ async function main() {
       presaleConfig: {
         rate: "666.666666666666666 tokens per USD",
         maxTokens: "5,000,000,000",
-        duration: "30 days"
+        duration: days + " days"
       }
     };
 
@@ -123,7 +133,7 @@ async function main() {
 
     // ============ Increasing Time to check presale end claim rewards ================
     if (process.env.END_PRESALE === "true") {
-      console.log("\n[8/7] Making test purchases, increasing EVM time and ending presale...");
+      console.log("\n Making test purchases, increasing EVM time and ending presale...");
 
       // Aprobar USDC para el presale
       const usdcContract = await ethers.getContractAt("IERC20", whales.USDC.token);
@@ -139,7 +149,7 @@ async function main() {
       )).wait();
       console.log("✓ Purchased tokens with 100 USDC");
 
-      console.log("\n[8/7] Ending presale and increasing time by 31 days...");
+      console.log("\n Ending presale and increasing time by 31 days...");
       const timeIncrease = 31 * 24 * 60 * 60; // 31 días en segundos
       await ethers.provider.send("evm_increaseTime", [timeIncrease]);
       await ethers.provider.send("evm_mine", []); // Mina un bloque para aplicar el cambio
@@ -147,13 +157,21 @@ async function main() {
       console.log("✓ Presale ended after 31 days");
     }
 
+    // ============ Set Test Account KYC to True ============
+    if (process.env.BYPASS_KYC === 'true') {
+      console.log('\n ByPassig KYC verification for Test Account')
+      await (await simpleKYCContract.adminSetVerified(testAccount.address)).wait()
+      console.log('✓ KYC enabled for test account')
+    }
+
     // ============ Summary ============
     console.log("\n" + "=".repeat(60));
     console.log("DEPLOYMENT COMPLETE");
     console.log("=".repeat(60));
     console.log("\nContracts:");
-    console.log("  Unity Token:", unityTokenAddress);
-    console.log("  Presale:", presaleAddress);
+    console.log("  Unity Token: ", unityTokenAddress);
+    console.log("  Presale: ", presaleAddress);
+    console.log("  SimpleKYC: ", simpleKYCAddress)
     console.log("\nTest Account:", testAccount.address);
     console.log("  Ready to test purchases with funded tokens");
     console.log("\nRPC: http://127.0.0.1:8545");

@@ -5,6 +5,7 @@
     "node": "npx hardhat node",
     "deploy": "npx hardhat run scripts/deploy-and-config.ts --network localhost",
     "deploy-end-presale": "END_PRESALE=true npx hardhat run scripts/deploy-and-config.ts --network localhost",
+    "deploy-bypass-kyc": "BYPASS_KYC=true npx hardhat run scripts/deploy-and-config.ts --network localhost",
     "compile": "npx hardhat compile"
   },
   "devDependencies": {
@@ -30,7 +31,7 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.9.6",
+    "@openzeppelin/contracts": "^5.4.0",
     "dotenv": "^17.2.3"
   }
 }

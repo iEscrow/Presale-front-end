@@ -1,9 +1,10 @@
 {
   "network": "hardhat-fork",
-  "timestamp": "2025-10-11T14:59:40.148Z",
+  "timestamp": "2025-10-17T16:43:03.817Z",
   "contracts": {
     "unityToken": "0x82F3c3a79fD86895Ef7FA87C61A914d266e6Fb5e",
-    "presale": "0x2905a73157457204e9c1aa55579B561944E06ee5"
+    "presale": "0x1e5CB74A9cD5c66D71d7cf38166F553aB68004e0",
+    "simpleKYC": "0x2905a73157457204e9c1aa55579B561944E06ee5"
   },
   "tokens": {
     "USDC": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
@@ -26,6 +27,6 @@
   "presaleConfig": {
     "rate": "666.666666666666666 tokens per USD",
     "maxTokens": "5,000,000,000",
-    "duration": "30 days"
+    "duration": "34 days"
   }
 }

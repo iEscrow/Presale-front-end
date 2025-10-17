@@ -26,8 +26,8 @@ const config: HardhatUserConfig = {
       throwOnTransactionFailures: true,
       throwOnCallFailures: true,
       loggingEnabled: true,
-      gasPrice: 1,
-      initialBaseFeePerGas: 1
+      // gasPrice: 1,
+      // initialBaseFeePerGas: 1
     },
     localhost: {
       url: "http://127.0.0.1:8545",
