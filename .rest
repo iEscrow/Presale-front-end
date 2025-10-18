@@ -1,6 +1,10 @@
+### Returns a new access token, response must be provided to the SumSub expiration handler, wrapped in a promise
 POST http://localhost:3000/api/sumsub/accesstoken HTTP/1.1
 Content-Type: application/json
 
 {
   "address": "0x03a54ADc7101393776C200529A454b4cDc3545C5"
 }
+
+### Get KYC signature status for polling
+GET http://localhost:3000/api/sumsub/getsignature/0x03a54ADc7101393776C200529A454b4cDc3545C5 HTTP/1.1

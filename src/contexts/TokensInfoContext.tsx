@@ -1,5 +1,5 @@
 import { Address } from '@/globalTypes';
-import { ABIS, TokenDecimals } from '@/utils';
+import { ABIS, TokenDecimals } from '@/utils/utils';
 import React, { createContext, useState, PropsWithChildren, useEffect, Dispatch, SetStateAction } from 'react';
 import { useAccount, useChainId, useReadContract } from 'wagmi';
 

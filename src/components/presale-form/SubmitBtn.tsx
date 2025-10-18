@@ -5,7 +5,7 @@ import useNetStatus from "@/hooks/useNetStatus";
 import { FormEvent, use, useState, useEffect, useMemo } from "react";
 import { writeContract, waitForTransactionReceipt, readContract } from "wagmi/actions";
 import { parseUnits } from "viem";
-import { ABIS, TOKEN_DECIMALS, TokenDecimals } from "@/utils";
+import { ABIS, TOKEN_DECIMALS, TokenDecimals } from "@/utils/utils";
 import { useConfig } from "wagmi";
 import { InvalidateQueryFilters, useQueryClient } from "@tanstack/react-query";
 import { Address } from "@/globalTypes";
@@ -146,7 +146,7 @@ const SubmitBtn = () => {
         hash = await writeContract(config, {
           address: PRESALE_ADDRESS,
           abi: ABIS.PRESALE,
-          functionName: 'buyWithNativeFixed',
+          functionName: 'buyWithNative',
           args: [userAddress],
           value: amount + gasBuffer,
           chainId

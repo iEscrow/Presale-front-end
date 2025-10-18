@@ -1,5 +1,5 @@
 import { useCurrencyBalance } from "@/hooks/useCurrencyBalance";
-import { TOKEN_DECIMALS } from "@/utils";
+import { TOKEN_DECIMALS } from "@/utils/utils";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { useEffect } from "react";
 

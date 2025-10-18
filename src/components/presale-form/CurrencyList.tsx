@@ -1,7 +1,7 @@
 import { TokensInfoContext } from "@/contexts/TokensInfoContext";
 import { use } from "react";
 import CurrencyRadio from "./CurrencyRadio";
-import { PLACEHOLDER_TOKENS } from "@/utils";
+import { PLACEHOLDER_TOKENS } from "@/utils/utils";
 import CurrenciesPlaceholder from "./CurrenciesPlaceholder";
 import useNetStatus from "@/hooks/useNetStatus";
 import { PuffLoader } from "react-spinners";

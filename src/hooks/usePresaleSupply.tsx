@@ -2,7 +2,7 @@
 import { useMemo } from "react";
 import { formatUnits } from "viem";
 import { useChainId, useReadContract } from "wagmi";
-import { ABIS, PRESALE_SUPPLY } from "@/utils";
+import { ABIS, PRESALE_SUPPLY } from "@/utils/utils";
 import { Address } from "@/globalTypes";
 
 export const usePresaleSupply = () => {

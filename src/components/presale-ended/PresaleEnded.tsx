@@ -1,4 +1,4 @@
-import { ABIS, ESCROW_USD_VALUE, USD_DECIMALS } from "@/utils";
+import { ABIS, ESCROW_USD_VALUE, USD_DECIMALS } from "@/utils/utils";
 import FormTitle from "../presale-form/FormTitle";
 import useNetStatus from "@/hooks/useNetStatus";
 import { useReadContract } from "wagmi";

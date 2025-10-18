@@ -1,7 +1,7 @@
 // contexts/PresaleStatusContext.tsx
 import { createContext, PropsWithChildren, useEffect, useState } from "react";
 import { usePublicClient, useWatchContractEvent } from "wagmi";
-import { ABIS } from "@/utils";
+import { ABIS } from "@/utils/utils";
 import { Indexable, PresaleStatus } from "@/globalTypes";
 import { formatUnits } from "viem/utils";
 

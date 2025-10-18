@@ -1,5 +1,5 @@
 import { useCurrencyBalance } from "@/hooks/useCurrencyBalance"
-import { ESCROW_USD_VALUE, USD_DECIMALS } from "@/utils"
+import { ESCROW_USD_VALUE, USD_DECIMALS } from "@/utils/utils"
 import { formatUnits } from "viem/utils"
 import WithLines from "./WithLines"
 

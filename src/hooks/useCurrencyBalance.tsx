@@ -2,7 +2,7 @@ import { use, useMemo } from "react";
 import { useAccount, useBalance, useChainId, useReadContract } from "wagmi";
 import { formatUnits } from "viem/utils";
 import { TokensInfoContext } from "@/contexts/TokensInfoContext";
-import { ABIS, TOKEN_DECIMALS, USD_DECIMALS, TokenDecimals, ESCROW_USD_VALUE } from "@/utils";
+import { ABIS, TOKEN_DECIMALS, USD_DECIMALS, TokenDecimals, ESCROW_USD_VALUE } from "@/utils/utils";
 import { Address } from "@/globalTypes";
 import { usePresaleSupply } from "@/hooks/usePresaleSupply";
 

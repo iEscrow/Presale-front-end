@@ -1,6 +1,6 @@
 import { Address } from "@/globalTypes";
 import useNetStatus from "@/hooks/useNetStatus";
-import { ABIS, ESCROW_USD_VALUE, USD_DECIMALS } from "@/utils";
+import { ABIS, ESCROW_USD_VALUE, USD_DECIMALS } from "@/utils/utils";
 import { useEffect } from "react";
 import { formatUnits } from "viem";
 import { useReadContract } from "wagmi";

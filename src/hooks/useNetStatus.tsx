@@ -1,6 +1,6 @@
 'use client'
 
-import { ALLOWED_NETS } from "@/utils";
+import { ALLOWED_NETS } from "@/utils/utils";
 import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react";
 import { useAccount, useChainId } from "wagmi";

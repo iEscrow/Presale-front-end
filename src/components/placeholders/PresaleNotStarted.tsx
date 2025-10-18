@@ -1,5 +1,5 @@
 import { PresaleStatus } from "@/globalTypes";
-import { formatTimestampToUTC } from "@/utils";
+import { formatTimestampToUTC } from "@/utils/utils";
 
 type PresaleNotStartedProps = PresaleStatus;
 

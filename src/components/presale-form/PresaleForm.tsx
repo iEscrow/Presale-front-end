@@ -29,7 +29,7 @@ const PresaleForm = () => {
           <CurrencyList/>
           <CurrentBalance/>
           <CurrencyInput/>
-          <GasFee/>
+          {/* <GasFee/> */}
         </div>
         <TokensToReceive/>
         <ESCROWBalance/>
