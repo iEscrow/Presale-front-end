@@ -6,6 +6,8 @@ import { ethers } from "ethers";
 
 export async function POST(request: NextRequest) {
 
+  console.log('WEBHOOK Sumsub - Set Verification Status recibido !!!!!! ');
+
   const bodyText = await request.text();
 
   const digest = request.headers.get('x-payload-digest');

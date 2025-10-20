@@ -12,3 +12,5 @@ export type PresaleStatus = {
 export type Indexable = {[key:string]: any}
 
 export type GenericIndexable<T> = {[key: string]: T}
+
+export type KYCStatus = 'not_started' | 'pending' | 'approved' | 'rejected' | 'verified_onchain'

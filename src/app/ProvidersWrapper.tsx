@@ -1,18 +1,18 @@
 'use client';
 
 import { connectorsForWallets, darkTheme, getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { coinbaseWallet, metaMaskWallet, phantomWallet, trustWallet, walletConnectWallet } from "@rainbow-me/rainbowkit/wallets";
+import { metaMaskWallet, phantomWallet, trustWallet, walletConnectWallet } from "@rainbow-me/rainbowkit/wallets";
 import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { PropsWithChildren } from "react";
 import { defineChain } from "viem/chains/utils";
-import { WagmiProvider, createConfig, http, useAccountEffect, useDisconnect } from "wagmi";
-import { base, mainnet } from "wagmi/chains";
+import { WagmiProvider, createConfig, http, useAccountEffect } from "wagmi";
+import { mainnet } from "wagmi/chains";
 import { GetSiweMessageOptions, RainbowKitSiweNextAuthProvider } from '@rainbow-me/rainbowkit-siwe-next-auth';
 import { SessionProvider, signOut } from 'next-auth/react';
 import { HttpTransport } from "viem";
 import { GenericIndexable } from "@/globalTypes";
 import { PresaleStatusProvider } from "@/contexts/PresaleStatusContext";
-import SumsubWebSdk from '@sumsub/websdk-react'
+import { KYCProvider } from "@/contexts/KYCContext";
 
 export const hardhat = defineChain({
   id: 31337,
@@ -101,7 +101,9 @@ const ProvidersWrapper = ({ children }: PropsWithChildren) => {
             <RainbowKitProvider theme={darkTheme()} modalSize="compact">
               <DisconnectHandler />
               <PresaleStatusProvider>
-                {children}
+                <KYCProvider>
+                  {children}
+                </KYCProvider>
               </PresaleStatusProvider>
             </RainbowKitProvider>
           </RainbowKitSiweNextAuthProvider>

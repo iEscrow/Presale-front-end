@@ -7,15 +7,12 @@ export async function GET(
   { params }: { params: { address: string } }
 ) {
   const { address } = await params;
-
-  console.log(address)
   
-  // Validar que sea una address válida
   if (!ethers.isAddress(address)) {
     return Response.json({ 
       error: 'Invalid Ethereum address' 
-    }, { 
-      status: 400 
+    }, {
+      status: 400
     });
   }
   
@@ -30,12 +27,13 @@ export async function GET(
     });
   }
   
-  // Buscar en database
   const { data: kyc, error } = await supabase
     .from('kyc_verifications')
     .select('*')
     .eq('wallet_address', address)
     .single();
+
+  console.log(kyc)
   
   if (error && error.code !== 'PGRST116') { // PGRST116 = not found (no es error)
     console.error('❌ Error consultando DB:', error);
@@ -47,7 +45,6 @@ export async function GET(
     });
   }
   
-  // No existe registro
   if (!kyc) {
     return Response.json({
       status: 'not_started',
@@ -56,7 +53,6 @@ export async function GET(
     });
   }
   
-  // KYC rechazado
   if (kyc.kyc_status === 'rejected') {
     return Response.json({
       status: 'rejected',
@@ -65,9 +61,7 @@ export async function GET(
     });
   }
   
-  // KYC aprobado con firma
   if (kyc.kyc_status === 'approved' && kyc.signature) {
-    // Verificar que no haya expirado
     const now = Math.floor(Date.now() / 1000);
     const isExpired = kyc.expiry && kyc.expiry < now;
     
@@ -83,13 +77,12 @@ export async function GET(
       status: 'approved',
       hasSignature: true,
       signature: kyc.signature,
-      nonce: kyc.nonce?.toString(), // Convertir BigInt a string
+      nonce: kyc.nonce?.toString(),
       expiry: kyc.expiry,
       message: 'Ready to verify on-chain'
     });
   }
   
-  // Estado inesperado
   return Response.json({
     status: 'unknown',
     hasSignature: false,

@@ -6,5 +6,5 @@ Content-Type: application/json
   "address": "0x03a54ADc7101393776C200529A454b4cDc3545C5"
 }
 
-### Get KYC signature status for polling
+### Get KYC signature status
 GET http://localhost:3000/api/sumsub/getsignature/0x03a54ADc7101393776C200529A454b4cDc3545C5 HTTP/1.1
