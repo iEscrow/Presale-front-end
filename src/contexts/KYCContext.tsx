@@ -1,8 +1,8 @@
 'use client'
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useConfig } from 'wagmi';
-import { readContract } from 'wagmi/actions';
+import { useConfig, useReadContract } from 'wagmi';
+import { writeContract, waitForTransactionReceipt, readContract } from 'wagmi/actions';
 import { Address } from '@/globalTypes';
 import useNetStatus from '@/hooks/useNetStatus';
 import { ABIS } from '@/utils/utils';
@@ -39,7 +39,23 @@ export const KYCProvider = ({ children }: { children: ReactNode }) => {
   const { address: userAddress, chainId } = useNetStatus();
   const config = useConfig();
 
-  const KYC_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_SIMPLE_KYC_ADDRESS as Address;
+  const KYC_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_KYCVERIFICATION_ADDRESS as Address;
+
+  const { data, error } = useReadContract({
+    address: KYC_CONTRACT_ADDRESS,
+    abi: ABIS.KYCVERIFICATION,
+    functionName: 'isCurrentlyVerified',
+    args: userAddress ? [userAddress] : undefined,
+    chainId,
+  })
+
+  useEffect(() => {
+    if(error) {
+      console.log('isCurrently verified error: ' + error)
+    } else {
+      console.log('isCurrently verified data: ' + data)
+    }
+  }, [data])
 
   // Check on-chain KYC status
   const checkOnChainKYC = async () => {
@@ -48,7 +64,7 @@ export const KYCProvider = ({ children }: { children: ReactNode }) => {
     try {
       const isVerified = await readContract(config, {
         address: KYC_CONTRACT_ADDRESS,
-        abi: ABIS.SIMPLEKYC,
+        abi: ABIS.KYCVERIFICATION,
         functionName: 'isCurrentlyVerified',
         args: [userAddress],
         chainId
@@ -67,8 +83,6 @@ export const KYCProvider = ({ children }: { children: ReactNode }) => {
     try {
       const response = await fetch(`/api/sumsub/getsignature/${userAddress}`);
       const data = await response.json();
-
-      console.log(data)
 
       if (data.status === 'approved' && data.hasSignature) {
         setKYCStatus('approved');
@@ -189,6 +203,10 @@ const SumsubModal = ({ userAddress, onClose, onVerificationComplete }: SumsubMod
   const [isPolling, setIsPolling] = useState(false);
   const [pollingInterval, setPollingInterval] = useState<NodeJS.Timeout | null>(null);
 
+  const config = useConfig();
+  const { chainId } = useNetStatus();
+  const KYC_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_KYCVERIFICATION_ADDRESS as Address;
+
   // Get initial access token
   useEffect(() => {
     const getAccessToken = async () => {
@@ -216,6 +234,63 @@ const SumsubModal = ({ userAddress, onClose, onVerificationComplete }: SumsubMod
     getAccessToken();
   }, [userAddress]);
 
+  // Function to write KYC verification on-chain
+  const writeKYCToBlockchain = async (signature: string, nonce: string, expiry: number, verified: boolean) => {
+    console.log('=== Writing KYC to Blockchain ===');
+    console.log('userAddress:', userAddress);
+    console.log('verified:', verified);
+    console.log('expiry:', expiry, '→ BigInt:', BigInt(expiry));
+    console.log('nonce:', nonce, '→ BigInt:', BigInt(nonce));
+    console.log('signature:', signature);
+    
+    let toastId = '';
+    try {
+      toastId = toast.loading('Confirming on-chain...', { duration: Infinity });
+
+      const hash = await writeContract(config, {
+        address: KYC_CONTRACT_ADDRESS,
+        abi: ABIS.KYCVERIFICATION,
+        functionName: 'verifyKYC',
+        args: [
+          userAddress as Address,
+          verified,
+          BigInt(expiry),
+          BigInt(nonce),
+          signature as `0x${string}` // ✅ FIX: Cambiado de "as Address" a "as `0x${string}`"
+        ],
+        chainId
+      });
+
+      console.log('✅ KYC verification TX hash:', hash);
+
+      await waitForTransactionReceipt(config, { hash, chainId });
+      
+      toast.dismiss(toastId);
+      toast.success('KYC verified!', { duration: 4000 });
+      
+      return true;
+    } catch (error: any) {
+      console.error('❌ Error writing KYC to blockchain:', error);
+      toast.dismiss(toastId);
+      
+      // Handle specific errors
+      if (error?.message?.includes('AlreadyVerified')) {
+        toast.success('Already verified!');
+        return true; // Not an error, user is already verified
+      } else if (error?.message?.includes('InvalidNonce')) {
+        toast.error('Invalid nonce');
+      } else if (error?.message?.includes('InvalidSignature')) {
+        toast.error('Invalid signature');
+      } else if (error?.message?.includes('InvalidExpiryTimestamp')) {
+        toast.error('Invalid expiry');
+      } else {
+        toast.error('Verification failed');
+      }
+      
+      return false;
+    }
+  };
+
   // Polling function
   const startPolling = () => {
     if (isPolling) return;
@@ -228,18 +303,27 @@ const SumsubModal = ({ userAddress, onClose, onVerificationComplete }: SumsubMod
         const response = await fetch(`/api/sumsub/getsignature/${userAddress}`);
         const data = await response.json();
 
-        console.log(data)
+        console.log('Polling response:', data);
 
         if (data.status === 'approved' && data.hasSignature) {
           clearInterval(interval);
           setIsPolling(false);
           toast.dismiss('kyc-polling');
-          toast.success('KYC approved!');
           
-          // TODO: Uncomment when final KYC contract is ready
-          // await writeKYCToBlockchain(data.signature, data.nonce, data.expiry);
+          // Write KYC to blockchain
+          const success = await writeKYCToBlockchain(
+            data.signature, 
+            data.nonce, 
+            data.expiry,
+            true // verified is always true when approved
+          );
           
-          onVerificationComplete();
+          if (success) {
+            onVerificationComplete();
+          } else {
+            // If blockchain write fails, still close modal but don't mark as complete
+            toast.error('Verification failed');
+          }
         } else if (data.status === 'rejected') {
           clearInterval(interval);
           setIsPolling(false);
@@ -310,45 +394,27 @@ const SumsubModal = ({ userAddress, onClose, onVerificationComplete }: SumsubMod
   }
 
   return (
-    <div className="fixed h-screen w-screen flex items-center justify-center inset-0 z-[100] bg-black">
-      <button className="absolute top-4 right-8 h-fit w-fit text-2xl z-10 cursor-pointer" onClick={onClose}>
+    <div className="fixed inset-0 z-[100] bg-black">
+      <button
+        onClick={onClose}
+        className="absolute top-4 right-6 md:right-8 z-[101] h-fit w-fit"
+      >
         <img 
-          src="/img/cancel.svg" 
-          alt="Cancel kyc button"
-          className='md:size-12 size-8'
+          src="img/cancel.svg" alt="" 
+          className='size-8 md:size-12 cursor-pointer text-white'
         />
       </button>
       <SumsubWebSdk
         testEnv={process.env.NEXT_PUBLIC_ENVIRONMENT === 'development'}
         accessToken={accessToken}
         expirationHandler={handleTokenExpiration}
+        config={{
+          theme: 'dark',
+        }}
         onMessage={handleMessage}
         onError={handleError}
-        className='h-screen w-screen flex items-center justify-center'
+        className="h-screen w-screen flex items-center justify-center"
       />
     </div>
   );
 };
-
-/* 
-TODO: Implement when final KYC contract is ready
-This function should verify the KYC signature on-chain
-
-async function writeKYCToBlockchain(signature: string, nonce: string, expiry: number) {
-  try {
-    const hash = await writeContract(config, {
-      address: KYC_CONTRACT_ADDRESS,
-      abi: ABIS.KYC,
-      functionName: 'verifyKYCWithSignature', // Method name depends on final contract
-      args: [userAddress, nonce, expiry, signature],
-      chainId
-    });
-
-    await waitForTransactionReceipt(config, { hash, chainId });
-    toast.success('KYC verified on-chain');
-  } catch (error) {
-    console.error('Error writing KYC to blockchain:', error);
-    toast.error('On-chain verification failed');
-  }
-}
-*/

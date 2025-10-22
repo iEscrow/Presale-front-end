@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/utils/Pausable.sol";
-import "./SimpleKYC.sol";
+import "./KYCVerification.sol";
 
 contract MultiTokenPresale is Ownable, ReentrancyGuard, Pausable {
     using SafeERC20 for IERC20;
@@ -28,7 +28,7 @@ contract MultiTokenPresale is Ownable, ReentrancyGuard, Pausable {
     uint256 public totalTokensMinted;
     
     // KYC integration
-    SimpleKYC public kycContract;
+    KYCVerification public kycContract;
     bool public kycRequired = true; // KYC is required by default
     
     // Price management
@@ -107,7 +107,7 @@ contract MultiTokenPresale is Ownable, ReentrancyGuard, Pausable {
         presaleToken = IERC20(_presaleToken);
         presaleRate = _presaleRate;
         maxTokensToMint = _maxTokensToMint;
-        kycContract = SimpleKYC(_kycContract);
+        kycContract = KYCVerification(_kycContract);
         
         // Initialize default token prices and limits
         _initializeDefaultTokens();
@@ -759,7 +759,7 @@ contract MultiTokenPresale is Ownable, ReentrancyGuard, Pausable {
     function updateKYCContract(address _kycContract) external onlyOwner {
         require(_kycContract != address(0), "Invalid KYC contract");
         address oldContract = address(kycContract);
-        kycContract = SimpleKYC(_kycContract);
+        kycContract = KYCVerification(_kycContract);
         emit KYCContractUpdated(oldContract, _kycContract);
     }
     
